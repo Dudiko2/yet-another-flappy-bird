@@ -2,7 +2,9 @@ import "./style.css";
 import img from "./assets/sprite.png";
 import Ground from "./foreground";
 import BG from "./background";
+import Bird from "./bird";
 
+// GLOBALS
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 const sprite = document.createElement("img");
@@ -14,8 +16,10 @@ canvas.height = (width * 9) / 16;
 
 let prevTime = 0;
 
+// ENTITIES
 const ground = Ground(canvas, ctx, sprite);
 const bg = BG(canvas, ctx, sprite);
+const bird = Bird(canvas, ctx, sprite);
 
 const draw = () => {
 	ctx.fillStyle = "#2960E1";
@@ -23,9 +27,11 @@ const draw = () => {
 
 	bg.draw();
 	ground.draw();
+	bird.draw();
 };
 const update = (secs) => {
 	ground.update(secs);
+	bird.update(secs);
 };
 
 const gameLoop = (timestamp) => {
@@ -38,5 +44,8 @@ const gameLoop = (timestamp) => {
 
 	requestAnimationFrame(gameLoop);
 };
-
+addEventListener("click", () => {
+	bird.flap();
+	console.log("flap");
+});
 gameLoop();
