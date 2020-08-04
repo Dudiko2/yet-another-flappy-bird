@@ -3,19 +3,29 @@ const Bird = (cvs, ctx, sprite) => {
 	const framesY = [113, 139, 165];
 	const srcW = 34;
 	const srcH = 26;
+	const determineAngle = (a, b) => {
+		let angle = Math.atan(b / a);
+		angle = b >= 0 ? angle * 4 : angle;
+		angle = angle >= Math.PI / 2 ? Math.PI / 2 : angle;
+
+		return angle;
+	};
 
 	return {
 		x: 50,
-		y: cvs.height / 2 - srcH,
+		y: cvs.height / 5,
 		w: srcW,
 		h: srcH,
-		gravity: 8,
+		gravity: 6,
 		vY: 0,
 		frame: 0,
 		timeForFrame: 0.05,
 		timeElapsed: 0,
 		flapDir: -1,
 		angle: 0,
+		jump: 3.8,
+		alive: true,
+		onGround: false,
 
 		get center() {
 			return [this.x + this.w / 2, this.y + this.h / 2];
@@ -23,6 +33,7 @@ const Bird = (cvs, ctx, sprite) => {
 
 		draw() {
 			const [centerX, centerY] = this.center;
+
 			ctx.translate(centerX, centerY);
 			ctx.rotate(this.angle);
 
@@ -32,8 +43,8 @@ const Bird = (cvs, ctx, sprite) => {
 				framesY[this.frame],
 				srcW,
 				srcH,
-				0,
-				0,
+				-this.w / 2,
+				-this.h / 2,
 				this.w,
 				this.h
 			);
@@ -41,15 +52,16 @@ const Bird = (cvs, ctx, sprite) => {
 			ctx.rotate(-this.angle);
 			ctx.translate(-centerX, -centerY);
 		},
+
 		update(secondsPassed) {
 			this.timeElapsed += secondsPassed;
 
-			const [a, b] = [this.w / 2, this.vY];
-			this.angle = Math.atan(b / a);
-			this.angle = this.vY >= 0 ? this.angle * 4 : this.angle;
-			this.angle = this.angle >= Math.PI / 2 ? Math.PI / 2 : this.angle;
+			this.vY += this.gravity * secondsPassed;
+			this.y = this.onGround ? this.y : this.y + this.vY;
 
-			if (this.angle === Math.PI / 2) {
+			if (!this.onGround) this.angle = determineAngle(this.w / 2, this.vY);
+
+			if (this.angle === Math.PI / 2 || this.onGround) {
 				this.frame = 1;
 				this.flapDir = 1;
 				this.timeElapsed = 0;
@@ -61,14 +73,35 @@ const Bird = (cvs, ctx, sprite) => {
 				this.frame += this.flapDir;
 				this.timeElapsed = 0;
 			}
-			this.vY += this.gravity * secondsPassed;
-			this.y += this.vY * 1.2;
 		},
+
 		flap() {
-			this.vY = -5;
+			this.vY = -this.jump;
 			this.frame = 2;
 			this.timeElapsed = 0;
 			this.flapDir = 1;
+		},
+
+		onCollision(obj, cb) {
+			if (this.isColliding(obj)) cb();
+		},
+
+		isColliding(obj) {
+			return (
+				this.x + this.w >= obj.x &&
+				this.x <= obj.x + obj.w &&
+				this.y + this.h >= obj.y &&
+				this.y <= obj.y + obj.h
+			);
+		},
+
+		die() {
+			this.alive = false;
+		},
+
+		ground() {
+			this.die();
+			this.onGround = true;
 		},
 	};
 };

@@ -3,7 +3,6 @@ const BG = (cvs, ctx, sprite) => {
 	const srcY = 0;
 	const srcW = 275;
 	const srcH = 226;
-	const repeat = 4;
 
 	return {
 		x: srcX,
@@ -12,7 +11,7 @@ const BG = (cvs, ctx, sprite) => {
 		h: srcH,
 
 		draw() {
-			for (let i = 0; i < repeat; i++)
+			for (let i = 0; i * this.w < cvs.width; i++)
 				ctx.drawImage(
 					sprite,
 					srcX,

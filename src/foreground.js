@@ -1,9 +1,8 @@
 const Ground = (cvs, ctx, sprite) => {
 	const srcX = 277;
 	const srcY = 0;
-	const srcW = 223;
+	const srcW = 222;
 	const srcH = 111;
-	const repeat = 4;
 
 	return {
 		x: 0,
@@ -12,7 +11,7 @@ const Ground = (cvs, ctx, sprite) => {
 		h: srcH,
 
 		draw() {
-			for (let i = 0; i < repeat; i++)
+			for (let i = 0; i * this.w < cvs.width * 1.5; i++)
 				ctx.drawImage(
 					sprite,
 					srcX,
@@ -27,7 +26,7 @@ const Ground = (cvs, ctx, sprite) => {
 		},
 		update(secondsPassed) {
 			this.x -= 60 * secondsPassed;
-			this.x = this.x + this.w * repeat <= cvs.width ? 0 : this.x;
+			this.x = this.x + cvs.width * 1.5 <= cvs.width ? 0 : this.x;
 		},
 	};
 };
