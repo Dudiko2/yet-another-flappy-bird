@@ -24,8 +24,8 @@ const Ground = (cvs, ctx, sprite) => {
 					this.h
 				);
 		},
-		update(secondsPassed) {
-			this.x -= 60 * secondsPassed;
+		update(secondsPassed, pixPerSec) {
+			this.x -= pixPerSec * secondsPassed;
 			this.x = this.x + cvs.width * 1.5 <= cvs.width ? 0 : this.x;
 		},
 	};

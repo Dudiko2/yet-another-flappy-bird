@@ -23,7 +23,7 @@ const Bird = (cvs, ctx, sprite) => {
 		timeElapsed: 0,
 		flapDir: -1,
 		angle: 0,
-		jump: 3.8,
+		jump: 3.5,
 		alive: true,
 		onGround: false,
 
@@ -80,10 +80,6 @@ const Bird = (cvs, ctx, sprite) => {
 			this.frame = 2;
 			this.timeElapsed = 0;
 			this.flapDir = 1;
-		},
-
-		onCollision(obj, cb) {
-			if (this.isColliding(obj)) cb();
 		},
 
 		isColliding(obj) {
