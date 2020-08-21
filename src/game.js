@@ -12,7 +12,7 @@ sprite.src = img;
 canvas.width = 320;
 canvas.height = 640;
 
-const speed = 120;
+const SPEED = 120;
 
 const ground = Ground(canvas, ctx, sprite);
 const bg = BG(canvas, ctx, sprite);
@@ -38,8 +38,8 @@ const detectCollisions = () => {
 
 const update = (secs) => {
 	if (bird.alive) {
-		ground.update(secs, speed);
-		totalPipes.forEach((p) => p.update(secs, speed));
+		ground.update(secs, SPEED);
+		totalPipes.forEach((p) => p.update(secs, SPEED));
 	}
 	bird.update(secs);
 };
